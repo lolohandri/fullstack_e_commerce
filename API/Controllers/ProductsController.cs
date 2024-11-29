@@ -1,85 +1,120 @@
 using Core.Entities;
-using Infrastructure.Data;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
+[Tags("ProductAPI")]
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController(StoreContext context) : ControllerBase
+public class ProductsController(IProductRepository repository) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+    public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts([FromQuery]string? brand, [FromQuery]string? type, [FromQuery]string? sort)
     {
-        return await context.Products.ToListAsync();
+        return Ok(await repository.GetProductsAsync(brand, type, sort));
     }
-
+    
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<Product>> GetProduct(Guid id)
     {
-        var product = await context.Products.FindAsync(id);
+        var product = await repository.GetProductByIdAsync(id);
         if (product == null)
         {
-            return NotFound();
+            return NotFound(new
+            {
+                message = $"Product with id = {id} not found",
+            });
         }
         return product;
     }
-
+    
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProduct([FromBody]Product product)
     {
-        await context.Products.AddAsync(product);
-        await context.SaveChangesAsync();
+        repository.AddProduct(product);
 
-        return product;
+        if (await repository.SaveChangesAsync())
+        {
+            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
+        }
+
+        return BadRequest(new
+        {
+            message = "Unable to create product"
+        });
     }
-
-    [HttpPost("/createProducts")]
-    public async Task<ActionResult<IEnumerable<Product>>> CreateProducts([FromBody]IEnumerable<Product> products)
-    {
-        var productsList = products.ToList();
-        await context.Products.AddRangeAsync(productsList);
-        await context.SaveChangesAsync();
-
-        return productsList.ToList();
-    }
-
+    
     [HttpPut("{id:guid}")]
     public async Task<ActionResult> UpdateProduct(Guid id, [FromBody] Product product)
     {
         if (!ProductExists(id) || product.Id != id)
         {
-            return BadRequest("Cannot update product, because product does not exist");
+            return BadRequest(new
+            {
+                message = "Cannot update product, because product does not exist"
+            });
         }
-        context.Entry(product).State = EntityState.Modified;
-        await context.SaveChangesAsync();
-
-        return Ok(new
+        
+        repository.UpdateProduct(product);
+        if (await repository.SaveChangesAsync())
         {
-            message = $"Product with id = {product.Id} was updated"
+            return Ok(new
+            {
+                message = $"Product with id = {product.Id} was updated"
+            });
+        }
+
+        return BadRequest(new
+        {
+            message = "Unable to update product"
         });
     }
-
+    
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult> DeleteProduct(Guid id)
     {
-        var productToDelete = await context.Products.FindAsync(id);
+        var productToDelete = await repository.GetProductByIdAsync(id);
         if (productToDelete == null)
         {
-            return NotFound();
+            return NotFound(new
+            {
+                message = $"Product with id = {id} was not found"
+            });
         }
-        context.Products.Remove(productToDelete);
-        await context.SaveChangesAsync();
         
-        return Ok(new
+        repository.DeleteProduct(productToDelete);
+
+        if (await repository.SaveChangesAsync())
         {
-            message = $"Product with id = {id} was deleted"
+            return Ok(new
+            {
+                message = $"Product with id = {id} was deleted"
+            });
+        }
+        
+        return BadRequest(new
+        {
+            message = "Unable to delete product"
         });
+    }
+
+    [Tags("ProductAPI utils")]
+    [HttpGet("brands")]
+    public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
+    {
+        return Ok(await repository.GetBrandsAsync());
+    }
+    
+    [Tags("ProductAPI utils")]
+    [HttpGet("types")]
+    public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
+    {
+        return Ok(await repository.GetTypesAsync());
     }
 
     private bool ProductExists(Guid id)
     {
-        return context.Products.Any(e => e.Id == id);
+        return repository.ProductExists(id);
     }
 }

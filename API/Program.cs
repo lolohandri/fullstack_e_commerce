@@ -1,4 +1,6 @@
+using Core.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,10 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 #region Container
 
     builder.Services.AddControllers();
+
     builder.Services.AddDbContext<StoreContext>(opt =>
     {
         opt.UseNpgsql(builder.Configuration.GetConnectionString("StoreDatabase"));
     });
+
     builder.Services.AddCors(options =>
     {
         options.AddPolicy("AllowAll", policy =>
@@ -19,6 +23,8 @@ var builder = WebApplication.CreateBuilder(args);
                 .AllowAnyHeader();  // Allow any header
         });
     });
+
+    builder.Services.AddScoped<IProductRepository, ProductRepository>();
 #endregion 
 
 
@@ -42,5 +48,20 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+try
+{
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<StoreContext>();
+    
+    await context.Database.MigrateAsync();
+    await StoreContextSeed.SeedAsync(context);
+}
+catch (Exception e)
+{
+    Console.WriteLine(e);
+    throw;
+}
 
 app.Run();
