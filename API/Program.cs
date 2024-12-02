@@ -14,18 +14,24 @@ var builder = WebApplication.CreateBuilder(args);
         opt.UseNpgsql(builder.Configuration.GetConnectionString("StoreDatabase"));
     });
 
-    builder.Services.AddCors(options =>
-    {
-        options.AddPolicy("AllowAll", policy =>
-        {
-            policy.AllowAnyOrigin()   // Allow any origin
-                .AllowAnyMethod()   // Allow any HTTP method (GET, POST, etc.)
-                .AllowAnyHeader();  // Allow any header
-        });
-    });
+    // builder.Services.AddCors(options =>
+    // {
+    //     options.AddPolicy("AllowAll", policy =>
+    //     {
+    //         policy.AllowAnyOrigin()   // Allow any origin
+    //             .AllowAnyMethod()   // Allow any HTTP method (GET, POST, etc.)
+    //             .AllowAnyHeader();  // Allow any header
+    //     });
+    // });
+
+#endregion 
+
+#region Dependencies
 
     builder.Services.AddScoped<IProductRepository, ProductRepository>();
-#endregion 
+    builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+#endregion
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
