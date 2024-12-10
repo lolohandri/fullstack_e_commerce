@@ -1,7 +1,5 @@
-using System.Linq.Expressions;
-using Core.Entities;
-
-namespace Core.Specification;
+namespace Core.Specification.Product;
+using Entities;
 
 public class BrandListSpecification : BaseSpecification<Product, string>
 {

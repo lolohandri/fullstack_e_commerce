@@ -1,6 +1,5 @@
-using Core.Entities;
-
-namespace Core.Specification;
+namespace Core.Specification.Product;
+using Entities;
 
 public class TypeListSpecification : BaseSpecification<Product, string>
 {

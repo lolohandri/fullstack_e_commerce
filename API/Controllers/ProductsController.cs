@@ -1,20 +1,22 @@
+using API.RequestHelpers;
 using Core.Entities;
-using Core.Enums;
 using Core.Interfaces;
-using Core.Specification;
+using Core.Specification.Product;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 [Tags("ProductAPI")]
-[ApiController]
-[Route("api/[controller]")]
-public class ProductsController(IGenericRepository<Product> repository) : ControllerBase
+public class ProductsController(IGenericRepository<Product> repository) : BaseApiController
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts([FromQuery]string? brand, [FromQuery]string? type, [FromQuery]ESorting? sort)
+    public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts([FromQuery] ProductSpecParams productSpecParams)
     {
-        return Ok(await repository.GetAllAsync(new ProductSpecification(brand, type, sort)));
+        return await CreatePagedResult(
+            repository, 
+            new ProductSpecification(productSpecParams), 
+            productSpecParams.PageIndex,
+            productSpecParams.PageSize);
     }
     
     [HttpGet("{id:guid}")]
