@@ -13,7 +13,7 @@ public class ProductsController(IGenericRepository<Product> repository) : BaseAp
     public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts([FromQuery] ProductSpecParams productSpecParams)
     {
         return await CreatePagedResult(
-            repository, 
+            repository,
             new ProductSpecification(productSpecParams), 
             productSpecParams.PageIndex,
             productSpecParams.PageSize);
