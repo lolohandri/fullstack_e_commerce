@@ -2,9 +2,9 @@ import {Component, inject, OnInit} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {HeaderComponent} from './layout/header/header.component';
 import {HttpClient} from '@angular/common/http';
-import {data} from 'autoprefixer';
 import {Product} from './shared/models/product';
 import {Pagination} from './shared/models/pagination';
+import {ShopService} from './core/services/shop.service';
 
 @Component({
     selector: 'app-root',
@@ -15,17 +15,12 @@ import {Pagination} from './shared/models/pagination';
 })
 export class AppComponent implements OnInit {
     title = 'ui';
-    baseUrl = "http://localhost:5000/api/";
     products: Product[] = [];
 
-    private http = inject(HttpClient);
+    private shopService = inject(ShopService);
 
     ngOnInit(): void {
-        this.http.get<Pagination<Product>>(this.baseUrl + 'products', {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
+        this.shopService.getProducts()
             .subscribe(
                 {
                     next: response => {
