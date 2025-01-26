@@ -6,7 +6,7 @@ import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 
 @Component({
-  selector: 'app-product-item',
+    selector: 'app-product-item',
     imports: [
         MatCardContent,
         CurrencyPipe,
@@ -15,8 +15,8 @@ import {MatIcon} from '@angular/material/icon';
         MatIcon,
         MatCard
     ],
-  templateUrl: './product-item.component.html',
-  styleUrl: './product-item.component.scss'
+    templateUrl: './product-item.component.html',
+    styleUrl: './product-item.component.scss'
 })
 export class ProductItemComponent {
     @Input() product?: Product;

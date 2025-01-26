@@ -1,7 +1,4 @@
-import {
-    ErrorHandler, Inject,
-    Injectable, Injector
-} from '@angular/core';
+import {ErrorHandler, Inject, Injectable, Injector} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
 
 @Injectable()
