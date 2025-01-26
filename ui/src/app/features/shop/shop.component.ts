@@ -13,7 +13,7 @@ import {MatMenu, MatMenuTrigger} from '@angular/material/menu';
 import {MatListOption, MatSelectionList, MatSelectionListChange} from '@angular/material/list';
 import {first} from '../../../extensions/firstElementArrayExtension';
 import {ShopParams} from '../../shared/models/shopParams';
-import {ToastrService} from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-shop',
@@ -56,7 +56,9 @@ export class ShopComponent implements OnInit {
             .subscribe(
                 {
                     next: response => this.products = response.data,
-                    error: err => console.log(err.message),
+                    error: err => {
+                        throw err;
+                    }
                 }
             )
     }

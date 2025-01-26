@@ -16,10 +16,11 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(),
         provideAnimations(),
         provideToastr({
-            timeOut: 3000,
-            positionClass: 'toast-top-center',
+            closeButton: true,
+            positionClass: 'toast-bottom-right',
+            progressBar: true,
+            timeOut: 4000,
             preventDuplicates: true,
-            closeButton: true
         }),
         {
             provide: ErrorHandler,

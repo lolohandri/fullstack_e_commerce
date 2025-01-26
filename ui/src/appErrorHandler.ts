@@ -13,11 +13,10 @@ export class AppErrorHandler extends ErrorHandler {
     }
 
     public override handleError(error: any): void {
+        console.error(error);
         this.toastrService.error(
-            error.statusText,
-            error.name
+            error.name,
+            error.statusText
         );
-
-        super.handleError(error);
     }
 }
