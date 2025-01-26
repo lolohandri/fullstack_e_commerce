@@ -8,4 +8,5 @@ export interface Product {
     type: string;
     brand: string;
     quantityInStock: number;
+    pictureUrl: string;
 }
