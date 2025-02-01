@@ -33,6 +33,11 @@ $customTheme: mat.define-theme();
     .mdc-notched-outline__notch{
         border-right-style: none !important;
     }
+
+    .custom-toast{
+        width: 400px !important;
+        font-size: 12px;
+    }
 }
 
 .container {

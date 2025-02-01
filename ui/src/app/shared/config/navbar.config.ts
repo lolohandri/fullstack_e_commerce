@@ -13,6 +13,10 @@ export const getNavbarRoutes = () : NavbarProps[] => {
         {
             routerLink: '/contact',
             name: 'Contact'
+        },
+        {
+            routerLink: '/test-error',
+            name: 'TestError',
         }
     ]
 }

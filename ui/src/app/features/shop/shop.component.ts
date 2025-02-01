@@ -16,6 +16,7 @@ import {ShopParams} from '../../shared/models/shopParams';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {Pagination} from '../../shared/models/pagination';
 import {FormsModule} from '@angular/forms';
+import {BusyService} from '../../core/services/busy.service';
 
 @Component({
     selector: 'app-shop',
@@ -46,6 +47,7 @@ export class ShopComponent implements OnInit {
 
     private shopService = inject(ShopService);
     private dialogService = inject(MatDialog);
+    busyService = inject(BusyService);
 
     ngOnInit(): void {
         this.initializeShop();

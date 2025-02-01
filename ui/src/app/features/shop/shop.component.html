@@ -67,7 +67,7 @@
             <div class="mx-auto text-center">No data :(</div>
         }
     </div>
-} @else {
+} @else if (!products && !busyService.loading) {
     <div class="mx-auto text-center">No data :(</div>
 }
 
