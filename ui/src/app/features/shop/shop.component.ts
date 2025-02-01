@@ -1,19 +1,21 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, HostListener, inject, OnInit} from '@angular/core';
 import {Product} from '../../shared/models/product';
 import {ShopService} from '../../core/services/shop.service';
 import {ProductItemComponent} from '../product-item/product-item.component';
 import {MatDialog} from '@angular/material/dialog';
 import {FiltersDialogComponent} from './filters-dialog/filters-dialog.component';
-import {MatButton} from '@angular/material/button';
+import {MatButton, MatFabButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatBadge} from '@angular/material/badge';
-import {sortConfig} from '../../shared/config/sortConfig';
-import {SortingOption} from '../../shared/types/sortingOption';
+import {sortConfig} from '../../shared/config/sort.config';
+import {SortingOption} from '../../shared/types/sorting.option';
 import {MatMenu, MatMenuTrigger} from '@angular/material/menu';
 import {MatListOption, MatSelectionList, MatSelectionListChange} from '@angular/material/list';
 import {first} from '../../../extensions/firstElementArrayExtension';
 import {ShopParams} from '../../shared/models/shopParams';
-import { ToastrService } from 'ngx-toastr';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {Pagination} from '../../shared/models/pagination';
+import {FormsModule} from '@angular/forms';
 
 @Component({
     selector: 'app-shop',
@@ -25,20 +27,25 @@ import { ToastrService } from 'ngx-toastr';
         MatMenuTrigger,
         MatMenu,
         MatSelectionList,
-        MatListOption
+        MatListOption,
+        MatPaginator,
+        MatFabButton,
+        FormsModule,
+        MatIconButton
     ],
     templateUrl: './shop.component.html',
     styleUrl: './shop.component.scss'
 })
 export class ShopComponent implements OnInit {
-    products: Product[] = [];
-    filtersCount: number | undefined;
+    products?: Pagination<Product>;
+    filtersCount?: number;
     sortOptions: SortingOption[] = [];
     shopParams: ShopParams = new ShopParams();
+    pageSizeOptions: number[] = [5, 10, 15, 20];
+    showGoTopButton = false;
 
     private shopService = inject(ShopService);
     private dialogService = inject(MatDialog);
-    private toaster = inject(ToastrService);
 
     ngOnInit(): void {
         this.initializeShop();
@@ -55,7 +62,9 @@ export class ShopComponent implements OnInit {
         this.shopService.getProducts(this.shopParams)
             .subscribe(
                 {
-                    next: response => this.products = response.data,
+                    next: response => {
+                        this.products = response;
+                    },
                     error: err => {
                         throw err;
                     }
@@ -63,11 +72,24 @@ export class ShopComponent implements OnInit {
             )
     }
 
+    onSearchChange(): void {
+        console.log(this.shopParams.search);
+        this.shopParams.pageNumber = 1;
+        this.getProducts();
+    }
+
+    handlePageEvent(event: PageEvent): void {
+        this.shopParams.pageNumber = event.pageIndex + 1;
+        this.shopParams.pageSize = event.pageSize;
+        this.getProducts();
+    }
+
     onSortChange(event: MatSelectionListChange): void {
         let selectedOption: MatListOption | undefined = first(event.options);
 
         if (selectedOption) {
             this.shopParams.sort = selectedOption.value;
+            this.shopParams.pageNumber = 1;
             this.getProducts();
         }
     }
@@ -87,6 +109,7 @@ export class ShopComponent implements OnInit {
                     this.shopParams.types = result.selectedTypes;
                     this.shopParams.brands = result.selectedBrands;
                     this.filtersCount = result.filtersCount;
+                    this.shopParams.pageNumber = 1;
                 }
 
                 this.getProducts();
@@ -101,9 +124,22 @@ export class ShopComponent implements OnInit {
         return;
     }
 
+    @HostListener('window:scroll', [])
+    onScroll(): void {
+        this.showGoTopButton = window.scrollY > 100;
+    }
+
+    scrollToTop(): void {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+
     private resetFilters(): void {
         this.shopParams.brands = [];
         this.shopParams.types = [];
         this.filtersCount = undefined;
+        this.shopParams.pageNumber = 1;
     }
 }

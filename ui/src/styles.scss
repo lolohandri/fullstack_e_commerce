@@ -16,12 +16,28 @@ $customTheme: mat.define-theme();
     .mdc-button, .mdc-raised-button, .mdc-stroked-button, .mdc-flat-button {
         @apply rounded-md
     }
+
+    .go-to-top {
+        position: fixed;
+        bottom: 16px; /* Distance from the bottom of the screen */
+        right: 16px; /* Distance from the right side of the screen */
+        z-index: 1000; /* Ensure it's above other content */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional shadow for better visibility */
+    }
+
+    mat-form-field.small {
+        --mat-form-field-container-height: 40px;
+        --mat-form-field-container-vertical-padding: 8px;
+    }
+
+    .mdc-notched-outline__notch{
+        border-right-style: none !important;
+    }
 }
 
 .container {
     @apply mx-auto px-8;
 }
-
-.toast-top-center {
-    top: 30px;
+.text-primary{
+    color: #7d00fa;
 }

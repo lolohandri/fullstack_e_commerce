@@ -1,5 +1,5 @@
 import {SortOption} from '../enums/sortOption';
-import {SortingOption} from '../types/sortingOption';
+import {SortingOption} from '../types/sorting.option';
 
 export const sortConfig = (): SortingOption[] => {
     return [

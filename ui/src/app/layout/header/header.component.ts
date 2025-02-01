@@ -2,6 +2,9 @@ import {Component} from '@angular/core';
 import {MatBadge} from '@angular/material/badge';
 import {MatIcon} from '@angular/material/icon';
 import {MatButton} from '@angular/material/button';
+import {NavbarProps} from '../../shared/types/navbar.props';
+import {getNavbarRoutes} from '../../shared/config/navbar.config';
+import {RouterLink, RouterLinkActive} from '@angular/router';
 
 @Component({
     selector: 'app-header',
@@ -9,11 +12,13 @@ import {MatButton} from '@angular/material/button';
     imports: [
         MatBadge,
         MatIcon,
-        MatButton
+        MatButton,
+        RouterLink,
+        RouterLinkActive
     ],
     templateUrl: './header.component.html',
     styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-
+    navbarProps: NavbarProps[] = getNavbarRoutes();
 }

@@ -5,6 +5,7 @@ import {Product} from '../../shared/models/product';
 import {Pagination} from '../../shared/models/pagination';
 import {environment} from '../../../environments/environment';
 import {ShopParams} from '../../shared/models/shopParams';
+import {Guid} from 'guid-typescript';
 
 @Injectable({
     providedIn: 'root'
@@ -24,6 +25,14 @@ export class ShopService {
             },
             params
         });
+    }
+
+    getProduct(id: Guid): Observable<Product> {
+        return this.http.get<Product>(`${environment.baseApiUrl}/api/products/${id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
     }
 
     getBrands(): Subscription | undefined {
@@ -67,6 +76,9 @@ export class ShopService {
         }
         if (shopParams.sort !== undefined) {
             params = params.append('sort', shopParams.sort);
+        }
+        if (shopParams.search) {
+            params = params.append('searchTerm', shopParams.search);
         }
 
         params = params.append('pageSize', shopParams.pageSize);
