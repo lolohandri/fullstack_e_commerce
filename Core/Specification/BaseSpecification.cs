@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Core.Interfaces;
+using Core.Interfaces.Features;
 
 namespace Core.Specification;
 

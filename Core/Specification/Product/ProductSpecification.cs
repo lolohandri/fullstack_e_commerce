@@ -2,7 +2,7 @@ namespace Core.Specification.Product;
 
 using Enums;
 
-public class ProductSpecification : BaseSpecification<Entities.Product>
+public class ProductSpecification : BaseSpecification<Entities.Products.Product>
 {
     public ProductSpecification(ProductSpecParams specParams) : base(x =>
         (string.IsNullOrEmpty(specParams.SearchTerm) ||

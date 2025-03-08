@@ -1,6 +1,6 @@
-using Core.Entities;
+using Core.Entities.Products;
 
-namespace Core.Interfaces;
+namespace Core.Interfaces.Repositories;
 
 public interface IProductRepository
 {

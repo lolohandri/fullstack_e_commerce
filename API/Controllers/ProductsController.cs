@@ -1,6 +1,8 @@
 using API.RequestHelpers;
 using Core.Entities;
+using Core.Entities.Products;
 using Core.Interfaces;
+using Core.Interfaces.Repositories;
 using Core.Specification.Product;
 using Microsoft.AspNetCore.Mvc;
 

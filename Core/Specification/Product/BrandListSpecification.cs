@@ -1,7 +1,7 @@
 namespace Core.Specification.Product;
 using Entities;
 
-public class BrandListSpecification : BaseSpecification<Product, string>
+public class BrandListSpecification : BaseSpecification<Entities.Products.Product, string>
 {
     public BrandListSpecification()
     {

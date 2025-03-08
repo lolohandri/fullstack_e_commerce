@@ -1,6 +1,8 @@
 using API.RequestHelpers;
 using Core.Entities;
 using Core.Interfaces;
+using Core.Interfaces.Features;
+using Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
