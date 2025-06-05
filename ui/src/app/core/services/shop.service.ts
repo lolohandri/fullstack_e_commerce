@@ -12,6 +12,7 @@ import {Guid} from 'guid-typescript';
 })
 export class ShopService {
     private http = inject(HttpClient);
+    private apiUrl = environment.baseApiUrl + environment.productsController;
 
     brands: string[] = [];
     types: string[] = [];
@@ -19,7 +20,7 @@ export class ShopService {
     getProducts(shopParams: ShopParams): Observable<Pagination<Product>> {
         let params = this.getProductHttpParams(shopParams);
 
-        return this.http.get<Pagination<Product>>(`${environment.baseApiUrl}/api/products`, {
+        return this.http.get<Pagination<Product>>(this.apiUrl, {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -28,7 +29,7 @@ export class ShopService {
     }
 
     getProduct(id: Guid): Observable<Product> {
-        return this.http.get<Product>(`${environment.baseApiUrl}/api/products/${id}`, {
+        return this.http.get<Product>(this.apiUrl + `/${id}`, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -40,7 +41,7 @@ export class ShopService {
             return;
         }
 
-        return this.http.get<string[]>(`${environment.baseApiUrl}/api/products/brands`, {
+        return this.http.get<string[]>(this.apiUrl + '/brands', {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -55,7 +56,7 @@ export class ShopService {
             return;
         }
 
-        return this.http.get<string[]>(`${environment.baseApiUrl}/api/products/types`, {
+        return this.http.get<string[]>(this.apiUrl + '/types', {
             headers: {
                 'Content-Type': 'application/json'
             }

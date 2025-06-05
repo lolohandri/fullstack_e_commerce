@@ -3,13 +3,14 @@
         <div class="max-w-screen-2xl px-4 mx-auto">
             <div class="grid grid-cols-2 gap-8">
                 <div class="max-w-xl mx-auto">
-                    <img class="w-full" src="{{product.pictureUrl}}" alt="product image">
+                    <img class="w-full rounded-xl" src="{{product.pictureUrl}}" alt="product image">
                 </div>
 
                 <div>
                     <h1 class="text-2xl font-semibold text-gray-900">
                         {{product.name}}
                     </h1>
+
                     <div class="mt-4 items-center gap-4 flex">
                         <p class="text-3xl font-extrabold text-gray-900">
                             {{ product.price | currency : 'UAH' : '₴ ' }}
@@ -17,9 +18,13 @@
                     </div>
 
                     <div class="flex gap-4 mt-6">
-                        <button mat-flat-button>
+                        <button
+                            mat-flat-button
+                            (click)="updateCart()"
+                            [disabled]="quantity === quantityInCart"
+                        >
                             <mat-icon>shopping_cart</mat-icon>
-                            Add to cart
+                            {{getButtonText()}}
                         </button>
 
                         <mat-form-field appearance="outline" class="flex small">
@@ -28,8 +33,9 @@
                             </mat-label>
                             <input matInput
                                    type="number"
-                                   min="1"
+                                   min="0"
                                    max="{{product.quantityInStock}}"
+                                   [(ngModel)]="quantity"
                                    [defaultValue]="1">
                         </mat-form-field>
                     </div>
@@ -39,6 +45,10 @@
                     <p class="my-6 text-gray-500">
                         {{product.description}}
                     </p>
+
+                    @if (quantityInCart !== 0) {
+                        <p class="text-gray-700">You have {{quantityInCart}} in your cart</p>
+                    }
                 </div>
             </div>
         </div>

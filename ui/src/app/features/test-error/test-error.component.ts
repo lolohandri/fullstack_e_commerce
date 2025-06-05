@@ -12,7 +12,7 @@ import {environment} from '../../../environments/environment';
   styleUrl: './test-error.component.scss'
 })
 export class TestErrorComponent {
-    apiUrl = `${environment.baseApiUrl}/${environment.errorsController}`;
+    apiUrl = environment.baseApiUrl + environment.errorsController;
     httpClient = inject(HttpClient);
     validationErrors?: string[];
 

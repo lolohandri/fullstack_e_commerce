@@ -1,5 +1,4 @@
 using API.Middleware;
-using Core.Interfaces;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 using Infrastructure.Data;

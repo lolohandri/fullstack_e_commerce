@@ -9,7 +9,7 @@ public class CartService(IConnectionMultiplexer redis) : ICartService
 {
     private readonly IDatabase _database = redis.GetDatabase();
     
-    public async Task<ShoppingCart?> GetCartAsync(long cartId)
+    public async Task<ShoppingCart?> GetCartAsync(Guid cartId)
     {
         var data = await _database.StringGetAsync(cartId.ToString());
 
@@ -19,7 +19,7 @@ public class CartService(IConnectionMultiplexer redis) : ICartService
     public async Task<ShoppingCart?> SetCartAsync(ShoppingCart cart)
     {
         var created = await _database.StringSetAsync(cart.Id.ToString(), 
-            JsonConvert.SerializeObject(cart), TimeSpan.FromDays(30));
+            JsonConvert.SerializeObject(cart), TimeSpan.FromDays(7));
         
         if(!created) return null;
         

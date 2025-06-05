@@ -7,7 +7,7 @@ namespace API.Controllers;
 public class CartController(ICartService cartService) : BaseApiController
 {
     [HttpGet]
-    public async Task<ActionResult<ShoppingCart>> GetCartById(int cartId)
+    public async Task<ActionResult<ShoppingCart>> GetCartById(Guid cartId)
     {
         var cart = await cartService.GetCartAsync(cartId);
         
@@ -36,6 +36,9 @@ public class CartController(ICartService cartService) : BaseApiController
             return BadRequest("Could not delete cart.");
         }
         
-        return Ok($"Cart with id = {cartId:P} deleted");
+        return Ok(new
+        {
+            message = $"Cart with id = {cartId:P} deleted"
+        });
     }
 }

@@ -1,6 +1,6 @@
 @if (product) {
-    <mat-card appearance="raised" routerLink="/shop/{{product.id}}" class="product-card">
-        <img src="{{product.pictureUrl}}" alt="image of {{product.name}}">
+    <mat-card appearance="raised" class="product-card">
+        <img routerLink="/shop/{{product.id}}" src="{{product.pictureUrl}}" alt="image of {{product.name}}">
         <mat-card-content class="mt-2">
             <h2 class="text-sm font-semibold uppercase">
                 {{ product.name }}
@@ -10,7 +10,11 @@
             </p>
         </mat-card-content>
         <mat-card-actions>
-            <button mat-stroked-button class="w-full">
+            <button
+                mat-stroked-button
+                class="w-full"
+                (click)="cartService.addItemToCart(product)"
+            >
                 <mat-icon>add_shopping_cart</mat-icon>
                 Add to cart
             </button>

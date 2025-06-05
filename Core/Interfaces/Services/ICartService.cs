@@ -4,7 +4,7 @@ namespace Core.Interfaces.Services;
 
 public interface ICartService
 {
-    Task<ShoppingCart?> GetCartAsync(long cartId);
+    Task<ShoppingCart?> GetCartAsync(Guid cartId);
     
     Task<ShoppingCart?> SetCartAsync(ShoppingCart cart);
     

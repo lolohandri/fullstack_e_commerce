@@ -1,0 +1,24 @@
+<div class="h-full w-full p-12">
+    @if (!!cartService.cart() && cartService.itemsCount() !== 0) {
+        <div class="flex w-full items-start gap-6">
+            <div class="w-3/4">
+                @for (cartItem of cartService.cart()?.cartItems; track cartItem.productId) {
+                    <app-cart-item [cartItem]="cartItem"/>
+                }
+            </div>
+            <div class="w-1/4">
+                <app-order-summary/>
+            </div>
+        </div>
+    } @else {
+        <div class="flex items-center justify-center h-full w-full">
+            <mat-card class="p-6 w-96 text-center shadow-lg flex flex-col items-center">
+                <mat-icon class="text-gray-400">add_shopping_cart</mat-icon>
+                <h2 class="mt-4 text-lg font-semibold">Your cart is empty!</h2>
+                <p class="mt-2 text-gray-600">Please, add items to your cart...</p>
+                <button mat-raised-button color="primary" class="mt-4" routerLink="/shop">Go To Shop</button>
+            </mat-card>
+        </div>
+    }
+</div>
+
