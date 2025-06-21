@@ -15,7 +15,8 @@ export class CartService {
 
     cart: WritableSignal<Cart | null> = signal<Cart | null>(null);
     itemsCount: Signal<number | undefined> = computed(() => {
-        return this.cart()?.cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        const count = this.cart()?.cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        return count === 0 ? undefined : count;
     });
     totals = computed(() => {
         const cart = this.cart();

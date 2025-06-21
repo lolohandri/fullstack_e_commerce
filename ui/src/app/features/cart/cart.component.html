@@ -1,5 +1,5 @@
 <div class="h-full w-full p-12">
-    @if (!!cartService.cart() && cartService.itemsCount() !== 0) {
+    @if (!!cartService.cart() && cartService.itemsCount() && cartService.itemsCount() !== 0) {
         <div class="flex w-full items-start gap-6">
             <div class="w-3/4">
                 @for (cartItem of cartService.cart()?.cartItems; track cartItem.productId) {
