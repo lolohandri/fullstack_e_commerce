@@ -1,17 +1,24 @@
 import {inject, Injectable} from '@angular/core';
 import {CartService} from './cart.service';
-import {Observable, of} from 'rxjs';
-import {Cart} from '../../shared/models/cart';
+import {forkJoin, Observable, of} from 'rxjs';
+import {AccountService} from './account.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InitService {
     private cartService: CartService = inject(CartService);
+    private accountService: AccountService = inject(AccountService);
 
-    init(): Observable<Cart> | Observable<null>{
+    init() {
         const cartId = localStorage.getItem("cart_id");
-        return cartId ? this.cartService.getCart(cartId)
-            : of(null);
+        const cart$ = cartId ? this.cartService.getCart(cartId) : of(null);
+
+        // const user = this.accountService.getUserInfo();
+
+        return forkJoin({
+           cart: cart$,
+           // user
+        });
     }
 }

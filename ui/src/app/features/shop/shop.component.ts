@@ -8,7 +8,7 @@ import {MatButton, MatFabButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatBadge} from '@angular/material/badge';
 import {sortConfig} from '../../shared/config/sort.config';
-import {SortingOption} from '../../shared/types/sorting.option';
+import {SortingOptionType} from '../../shared/types/sorting-option.type';
 import {MatMenu, MatMenuTrigger} from '@angular/material/menu';
 import {MatListOption, MatSelectionList, MatSelectionListChange} from '@angular/material/list';
 import {first} from '../../../extensions/firstElementArrayExtension';
@@ -40,7 +40,7 @@ import {BusyService} from '../../core/services/busy.service';
 export class ShopComponent implements OnInit {
     products?: Pagination<Product>;
     filtersCount?: number;
-    sortOptions: SortingOption[] = [];
+    sortOptions: SortingOptionType[] = [];
     shopParams: ShopParams = new ShopParams();
     pageSizeOptions: number[] = [5, 10, 15, 20];
     showGoTopButton = false;

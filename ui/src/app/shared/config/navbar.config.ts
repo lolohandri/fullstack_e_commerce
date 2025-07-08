@@ -1,6 +1,6 @@
-import {NavbarProps} from '../types/navbar.props';
+import {NavbarPropsType} from '../types/navbar-props.type';
 
-export const getNavbarRoutes = () : NavbarProps[] => {
+export const getNavbarRoutes = () : NavbarPropsType[] => {
     return [
         {
             routerLink: '/',

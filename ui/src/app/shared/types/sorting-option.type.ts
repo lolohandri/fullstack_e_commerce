@@ -1,6 +1,6 @@
 import {SortOption} from '../enums/sortOption';
 
-export type SortingOption = {
+export type SortingOptionType = {
     name: string;
     value: SortOption | undefined;
 }

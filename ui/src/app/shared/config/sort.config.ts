@@ -1,7 +1,7 @@
 import {SortOption} from '../enums/sortOption';
-import {SortingOption} from '../types/sorting.option';
+import {SortingOptionType} from '../types/sorting-option.type';
 
-export const sortConfig = (): SortingOption[] => {
+export const sortConfig = (): SortingOptionType[] => {
     return [
         {
             name: 'Price: Low-High',
