@@ -1,15 +1,8 @@
+import {Address} from './address';
+
 export type User = {
     firstName: string;
     lastName: string;
     email: string;
     address: Address;
-}
-
-export type Address = {
-    line1: string;
-    line2?: string;
-    city: string;
-    state: string;
-    country: string;
-    postcode: string;
 }
