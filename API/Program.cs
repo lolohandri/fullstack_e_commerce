@@ -73,7 +73,16 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
-builder.Services.AddCors();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 
 var app = builder.Build();
 
@@ -84,7 +93,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
 
@@ -94,14 +103,6 @@ var identityApi = app.MapGroup("api").MapIdentityApi<AppUser>();
 identityApi.WithMetadata(new TagsAttribute("IdentityAPI"));
 
 app.UseMiddleware<ExceptionMiddleware>();
-
-app.UseCors(x => x
-    .AllowAnyHeader()
-    .AllowAnyMethod()
-    .AllowCredentials()
-    .WithOrigins(
-    "http://localhost:4200", 
-    "https://localhost:4200"));
 
 try
 {
