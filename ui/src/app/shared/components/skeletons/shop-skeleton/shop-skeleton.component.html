@@ -1,0 +1,26 @@
+<div class="flex flex-col gap-3 px-8 pb-8">
+    <!-- Skeleton for paginator + top controls -->
+    <div class="flex justify-between py-12 items-start">
+        <!-- Paginator skeleton -->
+        <ngx-skeleton-loader [theme]="{height: '40px', width: '250px'}"></ngx-skeleton-loader>
+
+        <!-- Search input skeleton -->
+        <ngx-skeleton-loader [theme]="{height: '48px', width: '320px', 'border-radius': '8px'}"></ngx-skeleton-loader>
+
+        <!-- Filters and sort buttons -->
+        <div class="flex gap-3">
+            <ngx-skeleton-loader [theme]="{height: '40px', width: '100px', 'border-radius': '4px'}"></ngx-skeleton-loader>
+            <ngx-skeleton-loader [theme]="{height: '40px', width: '100px', 'border-radius': '4px'}"></ngx-skeleton-loader>
+        </div>
+    </div>
+
+    <!-- Product skeleton cards -->
+    <div class="grid grid-cols-5 gap-4">
+        @for (_ of [].constructor(productsCount); track $index) {
+            <div class="p-4 shadow border rounded flex flex-col gap-2">
+                <ngx-skeleton-loader [theme]="{height: '250px', width: '100%', 'border-radius': '8px'}"></ngx-skeleton-loader>
+                <ngx-skeleton-loader [theme]="{height: '32px', width: '100%', 'border-radius': '6px'}"></ngx-skeleton-loader>
+            </div>
+        }
+    </div>
+</div>

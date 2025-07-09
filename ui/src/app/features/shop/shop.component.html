@@ -67,8 +67,14 @@
             <div class="mx-auto text-center">No data :(</div>
         }
     </div>
-} @else if (!products && !busyService.loading) {
+}
+@else if (!products && !busyService.loading) {
     <div class="mx-auto text-center">No data :(</div>
+}
+@else if (busyService.loading) {
+    <app-shop-skeleton
+        [productsCount]="10"
+    />
 }
 
 <mat-menu #sortMenu="matMenu">

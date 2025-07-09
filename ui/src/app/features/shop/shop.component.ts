@@ -17,6 +17,7 @@ import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {Pagination} from '../../shared/models/pagination';
 import {FormsModule} from '@angular/forms';
 import {BusyService} from '../../core/services/busy.service';
+import {ShopSkeletonComponent} from '../../shared/components/skeletons/shop-skeleton/shop-skeleton.component';
 
 @Component({
     selector: 'app-shop',
@@ -32,7 +33,8 @@ import {BusyService} from '../../core/services/busy.service';
         MatPaginator,
         MatFabButton,
         FormsModule,
-        MatIconButton
+        MatIconButton,
+        ShopSkeletonComponent
     ],
     templateUrl: './shop.component.html',
     styleUrl: './shop.component.scss'
