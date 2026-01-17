@@ -1,12 +1,51 @@
 services:
+  api:
+    build:
+      context: .
+      dockerfile: D:\RiderProjects\fullstack_e_commerce\API\Dockerfile
+    image: skinet-api:dev
+    restart: always
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: "https://+:5000;https://+:5001"
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "/https/aspnetapp.pfx"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: "senseye3LED"
+      ConnectionStrings__StoreDatabase: Host=db;Port=5432;Database=store_db;Username=postgres;Password=senseye3LEd
+      ConnectionStringsRedis: redis:6379
+    volumes:
+      - ./certs:/https:ro
   db:
-    image: postgres
+    image: postgres:16
     restart: always
     environment:
       POSTGRES_PASSWORD: senseye3LEd
       POSTGRES_USERNAME: postgres
       POSTGRES_DB: store_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - pgdata:/var/lib/postgresql/data
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 volumes:
   pgdata:

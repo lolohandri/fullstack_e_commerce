@@ -1,4 +1,4 @@
-using Core.Entities;
+using Core.Entities.Checkout;
 using Core.Entities.Products;
 using Newtonsoft.Json;
 
@@ -10,13 +10,29 @@ public static class StoreContextSeed
     {
         if (!context.Products.Any())
         {
-            var productsData = await File.ReadAllTextAsync("../Infrastructure/SeedData/products.json");
-            
+            var path = Path.Combine(AppContext.BaseDirectory, "Infrastructure", "SeedData", "products.json");
+
+            var productsData = await File.ReadAllTextAsync(path);
+
             var products = JsonConvert.DeserializeObject<List<Product>>(productsData);
-            
-            if(products == null) return;
-            
+
+            if (products == null) return;
+
             context.Products.AddRange(products);
+            await context.SaveChangesAsync();
+        }
+
+        if (!context.DeliveryMethods.Any())
+        {
+            var path = Path.Combine(AppContext.BaseDirectory, "Infrastructure", "SeedData", "delivery.json");
+
+            var deliveryMethodsData = await File.ReadAllTextAsync(path);
+
+            var deliveryMethods = JsonConvert.DeserializeObject<List<DeliveryMethod>>(deliveryMethodsData);
+
+            if (deliveryMethods == null) return;
+
+            context.DeliveryMethods.AddRange(deliveryMethods);
             await context.SaveChangesAsync();
         }
     }

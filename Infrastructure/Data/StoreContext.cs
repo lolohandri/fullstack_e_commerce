@@ -1,3 +1,4 @@
+using Core.Entities.Checkout;
 using Core.Entities.Products;
 using Core.Entities.Users;
 using Infrastructure.Config;
@@ -11,6 +12,8 @@ public class StoreContext(DbContextOptions<StoreContext> options) : IdentityDbCo
     public DbSet<Product> Products { get; set; }
     
     public DbSet<Address> Addresses { get; set; }
+    
+    public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

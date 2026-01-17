@@ -1,46 +1,53 @@
 using API.Middleware;
 using Core.Entities.Users;
+using Core.Interfaces.Payments;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Infrastructure.Services;
+using Infrastructure.Services.Payments;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 #region Container
 
-    builder.Services.AddControllers();
+builder.Services.AddControllers();
 
-    builder.Services.AddDbContext<StoreContext>(opt =>
-    {
-        opt.UseNpgsql(builder.Configuration.GetConnectionString("StoreDatabase"));
-    });
+builder.Services.AddDbContext<StoreContext>(opt =>
+{
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("StoreDatabase"));
+});
 
-#endregion 
+#endregion
 
 #region Dependencies
 
-    builder.Services.AddScoped<IProductRepository, ProductRepository>();
-    builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-    builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
-    {
-        var connectionString = builder.Configuration.GetConnectionString("Redis") ?? 
-                               throw new ApplicationException("Redis connection string is missing");
-        
-        var configuration = ConfigurationOptions.Parse(connectionString, true);
-        
-        return ConnectionMultiplexer.Connect(configuration);
-    });
-    builder.Services.AddSingleton<ICartService, CartService>();
-    builder.Services.AddAuthorization();
-    builder.Services
-        .AddIdentityApiEndpoints<AppUser>()
-        .AddEntityFrameworkStores<StoreContext>();
-    
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("Redis") ??
+                           throw new ApplicationException("Redis connection string is missing");
+
+    var options = ConfigurationOptions.Parse(connectionString);
+
+    options.AbortOnConnectFail = false;
+
+    return ConnectionMultiplexer.Connect(options);
+});
+
+builder.Services.AddSingleton<ICartService, CartService>();
+builder.Services.AddAuthorization();
+builder.Services
+    .AddIdentityApiEndpoints<AppUser>()
+    .AddEntityFrameworkStores<StoreContext>();
+builder.Services.AddScoped<IPaymentService, StripePaymentService>();
+
 #endregion
 
 
@@ -50,7 +57,7 @@ builder.Services.AddSwaggerGen(option =>
 {
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
-        Name = "Authorization",
+        Name = HeaderNames.Authorization,
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer",
         BearerFormat = "JWT",
@@ -58,19 +65,9 @@ builder.Services.AddSwaggerGen(option =>
         Description = "JWT Authorization header using the Bearer scheme."
     });
 
-    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    option.AddSecurityRequirement(document => new OpenApiSecurityRequirement
     {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            []
-        }
+        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
     });
 });
 builder.Services.AddCors(options =>
@@ -109,7 +106,7 @@ try
     using var scope = app.Services.CreateScope();
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<StoreContext>();
-    
+
     await context.Database.MigrateAsync();
     await StoreContextSeed.SeedAsync(context);
 }
